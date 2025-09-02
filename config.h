@@ -5,6 +5,9 @@
 #include <fstream>
 #include <string>
 #include <map>
+#include <sstream>
+#include <vector>
+#include <iterator>
 
 #include <jsoncpp/json/json.h>
 
@@ -24,8 +27,38 @@ public:
         _root = new Node();
     }
 
-    Node* find(std::string& path) {
-        return nullptr;
+    template <typename Out>
+    void split(const std::string &s, char delim, Out result) {
+        std::istringstream iss(s);
+        std::string item;
+        while (std::getline(iss, item, delim)) {
+            *result++ = item;
+        }
+    }
+
+    std::vector<std::string> split(const std::string &s, char delim) {
+        std::vector<std::string> elems;
+        split(s, delim, std::back_inserter(elems));
+        return elems;
+    }
+
+    Node* find(const std::string& path) {
+
+        std::vector<std::string> x = split(path, '/');
+
+        std::vector<std::string>::iterator it;
+
+        Node *n = _root;
+
+        for (it = x.begin(); it != x.end(); it++) {
+            Node* sub = n->get_node(*it);
+
+            if (sub) {
+                n = sub;
+            }
+        }
+       
+        return n;
     }
 
     void load_from_file(const std::string& file_name) {
@@ -43,33 +76,50 @@ public:
         }
     }
 
-    class JsonSaveVisitor : public Visitor
-    {
-    public:
-        JsonSaveVisitor() : Visitor()
-        {
-            root = Json::Value(Json::objectValue); 
+    // class JsonSaveVisitor : public Visitor
+    // {
+    // public:
+    //     JsonSaveVisitor() : Visitor()
+    //     {
+    //         root = Json::Value(Json::objectValue); 
 
-            parent = &root;
-            current = parent;
-        }
+    //         parent = &root;
+    //         //current = parent;
+    //     }
 
-        virtual void visit_node(const std::string& name) {
-            Json::Value object = Json::Value(Json::objectValue); 
+    //     virtual void visit_node(const std::string& name) {
 
-            (*parent)[name] = object;
-            current = &(*parent)[name];
-        }
+    //         std::cout << "node name " << name << std::endl;
+
+    //         Json::Value object = Json::Value(Json::objectValue); 
+
+    //         (*parent)[name] = object;
+    //         current = &(*parent)[name];
+
+    //         // top = parent;
+
+    //         parent = current;
+    //     }
         
-        virtual void visit_value(const std::string& key, Value& val) {
+    //     virtual void visit_value(const std::string& key, Value& val) {
 
-            (*current)[key] = val.as_str();
-        }
+    //         Json::Value object = Json::Value(Json::objectValue);
+            
+    //         object["val"] = val.as_str();
 
-        Json::Value* current;
-        Json::Value* parent;
-        Json::Value root;
-    };
+    //         (*current)[key] = object;
+    //     }
+
+    //     // virtual void end() {
+
+    //     //     // parent = top;
+    //     // }
+
+    //     // Json::Value* top;
+    //     Json::Value* current;
+    //     Json::Value* parent;
+    //     Json::Value root;
+    // };
 
 
     void save_to_file(const std::string& file_name) {
@@ -77,33 +127,35 @@ public:
         std::ofstream f;
         f.open(file_name);
     
-        JsonSaveVisitor visitor;
+        // JsonSaveVisitor visitor;
 
-        _root->visit(visitor);
+        // _root->visit(visitor);
+
+        Json::Value root = _root->build_JSON_Value();
 
         Json::StyledWriter styledWriter;
-        f << styledWriter.write(visitor.root);
+        f << styledWriter.write(root);
     
         f.close();
     }
 
-    class PrintVisitor : public Visitor
-    {
-    public:
+    // class PrintVisitor : public Visitor
+    // {
+    // public:
 
-        virtual void visit_node(const std::string& name) {
-            std::cout << " >>> node " << name << std::endl;
-        }
+    //     virtual void visit_node(const std::string& name) {
+    //         std::cout << " >>> node " << name << std::endl;
+    //     }
         
-        virtual void visit_value(const std::string& key, Value& val) {
-            std::cout << "      key " << key << " val " << val.as_str() << std::endl;
-        }
-    };
+    //     virtual void visit_value(const std::string& key, Value& val) {
+    //         std::cout << "      key " << key << " val " << val.as_str() << std::endl;
+    //     }
+    // };
 
-    void print() {
-        PrintVisitor visitor;
-        _root->visit(visitor);
-    }
+    // void print() {
+    //     PrintVisitor visitor;
+    //     _root->visit(visitor);
+    // }
 
 private:
 

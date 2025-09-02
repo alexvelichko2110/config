@@ -32,24 +32,25 @@ void Config::visit_value_json(Json::Value& node, const std::string& key, Node *p
             // std::cout << '"' << val.asString() << '"';
         }
         break;
-        case Json::arrayValue: {
-            Json::ArrayIndex size = node.size();
-            if (size == 0) {
-                // std::cout << "[]";
-            }
-            else
-            {
-                // std::cout << "[\n";
-                for (Json::ArrayIndex i=0; i<size; i++) {
+
+        // case Json::arrayValue: {
+        //     Json::ArrayIndex size = node.size();
+        //     if (size == 0) {
+        //         // std::cout << "[]";
+        //     }
+        //     else
+        //     {
+        //         // std::cout << "[\n";
+        //         for (Json::ArrayIndex i=0; i<size; i++) {
                     
-                    visit_value_json(node[i], "", parent);
+        //             visit_value_json(node[i], "", parent);
                     
-                    // std::cout << (i + 1 == size ? "\n" : ",\n");
-                }
-                // std::cout << ']';
-            }
-        }
-        break;
+        //             // std::cout << (i + 1 == size ? "\n" : ",\n");
+        //         }
+        //         // std::cout << ']';
+        //     }
+        // }
+        // break;
 
         case Json::objectValue: {
 
@@ -59,22 +60,53 @@ void Config::visit_value_json(Json::Value& node, const std::string& key, Node *p
                 
                 for (Json::Value::iterator it=node.begin(); it!=node.end(); ++it) {
 
-                    if (it->isMember("val"))
+                    std::string str = it.key().asString();
+
+                    if (it->isMember("type"))
                     {
-                        Json::Value& val = (*it)["val"];
-    
-                        std::string str = it.key().asString();
-                        
-                        if (val.type() == Json::intValue)
-                            parent->append_value(str,val.asInt());
+                        Json::Value& typ = (*it)["type"];
+
+                        std::cout << typ.asString() << std::endl;
+
+                        if (typ.asString() == "int")
+                        {
+                            Json::Value& val = (*it)["val"];
+                            Json::Value& min = (*it)["min"];
+                            Json::Value& max = (*it)["max"];
+                            Json::Value& step = (*it)["step"];
+                            parent->append_value(str,val.asInt(), min.asInt(), max.asInt(), step.asInt());    
+                        }
                         else
-                        if (val.type() == Json::realValue)
-                            parent->append_value(str,(float)val.asDouble());                        
+                        if (typ.asString() == "float")
+                        {
+                            // Json::Value& val = (*it)["val"];
+                            // parent->append_value(str,(float)val.asDouble());    
+
+                            Json::Value& val = (*it)["val"];
+                            Json::Value& min = (*it)["min"];
+                            Json::Value& max = (*it)["max"];
+                            Json::Value& step = (*it)["step"];
+                            parent->append_value(str, (float)val.asDouble(), (float)min.asDouble(), (float)max.asDouble(), (float)step.asDouble());    
+
+                        }
+                        else
+                        if (typ.asString() == "str")
+                        {
+                            Json::Value& val = (*it)["val"];
+                            parent->append_value(str,val.asString());    
+                        }
+
+
+                        // Json::Value& val = (*it)["val"];
+                            
+                        // if (val.type() == Json::intValue)
+                        //     parent->append_value(str,val.asInt());
+                        // else
+                        // if (val.type() == Json::realValue)
+                        //     parent->append_value(str,(float)val.asDouble());                        
                     }
                     else
                     {
-                        std::string str = it.key().asString();
-
                         // std::cout << "\"" << str << "\"" << std::endl;
 
                         Node *n = new Node();

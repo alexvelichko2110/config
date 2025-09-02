@@ -6,7 +6,6 @@
 
 int main(int argc, char *argv[])
 {
-
     // Node *root = new Node();
 
     // root->append_value("item1", 5);
@@ -30,8 +29,18 @@ int main(int argc, char *argv[])
     Config config;
 
     config.load_from_file("./config.json");
-    config.print();
-    config.save_to_file("./save.json");
+
+    Node* node5 = config.find("/node1/node5");
+
+    std::cout << "node5 " << node5->get_value("item1").as_int() << std::endl;
+
+    Node* node2 = config.find("/node2");
+
+    std::cout << "node2 " << node2->get_value("item1").as_int() << std::endl;
+
+
+    // config.print();
+    config.save_to_file("./config.json");
 
     return 0;
 
