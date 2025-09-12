@@ -61,44 +61,47 @@ class Value
 
         float as_float()
         {
-            float val = 0.0f;
-
-            if (_type == "float")
-                val = _float_val;
-            else if (_type == "int")
-                val = _int_val;
-            else if (_type == "str")
-                val = std::atof(_str_val.c_str());
-
-            return val;
+            return _float_val;
         }
 
         int as_int()
         {
-            int val = 0;
-
-            if (_type == "int")
-                val = _int_val;
-            else if (_type == "float")
-                val = _float_val;
-            else if (_type == "str")
-                val = std::atoi(_str_val.c_str());
-
-            return val;
+            return _int_val;
         }
 
         std::string as_str()
         {
-            std::string val = " ";
+            return _str_val;
+        }
 
-            if (_type == "int")
-                val = std::to_string(_int_val);
-            else if (_type == "float")
-                val = std::to_string(_float_val);
-            else if (_type == "str")
-                val = _str_val;
+        std::string get_type()
+        {
+            return _type;
+        }
 
-            return val;
+        int get_int_max() {
+            return _int_max;
+        }
+
+        int get_int_min() {
+            return _int_min;
+        }
+
+        int get_int_step() {
+            return _int_step;
+        }
+
+        
+        int get_float_max() {
+            return _float_max;
+        }
+
+        int get_float_min() {
+            return _float_min;
+        }
+
+        int get_float_step() {
+            return _float_step;
         }
 
     private:

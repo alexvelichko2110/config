@@ -1,0 +1,68 @@
+{
+   "item1" : {
+      "max" : 10,
+      "min" : 0,
+      "step" : 1,
+      "type" : "int",
+      "val" : 5
+   },
+   "item2" : {
+      "max" : 10,
+      "min" : 1,
+      "step" : 1,
+      "type" : "float",
+      "val" : 4.0
+   },
+   "item3" : {
+      "type" : "str",
+      "val" : "item str data"
+   },
+   "node1" : {
+      "item1" : {
+         "max" : 10,
+         "min" : 0,
+         "step" : 1,
+         "type" : "int",
+         "val" : 3
+      },
+      "item2" : {
+         "max" : 10,
+         "min" : 2,
+         "step" : 1,
+         "type" : "float",
+         "val" : 8.0
+      },
+      "node5" : {
+         "item1" : {
+            "max" : 10,
+            "min" : 0,
+            "step" : 1,
+            "type" : "int",
+            "val" : 3
+         },
+         "item2" : {
+            "max" : 10,
+            "min" : 2,
+            "step" : 1,
+            "type" : "float",
+            "val" : 8.0
+         }
+      }
+   },
+   "node2" : {
+      "item1" : {
+         "max" : 10,
+         "min" : 0,
+         "step" : 1,
+         "type" : "int",
+         "val" : 8
+      },
+      "item2" : {
+         "max" : 16,
+         "min" : 1,
+         "step" : 1,
+         "type" : "float",
+         "val" : 2.0
+      }
+   }
+}
